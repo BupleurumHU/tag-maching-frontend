@@ -47,7 +47,7 @@ onMounted(()=>{
       .then(function (response) {
         console.log('/user/search/tags succeed', response);
         // 对返回的数据进行处理，将 tags 字符串转换为数组
-        const userData = response.data?.data?.map((user: any) => ({
+        userList.value = response.data?.data?.map((user: any) => ({
           ...user,
           tags: typeof user.tags === 'string' ?
               (() => {
@@ -60,8 +60,6 @@ onMounted(()=>{
               })() :
               user.tags
         })) || [];
-
-        userList.value = userData;
         Toast.success('搜索成功');
       })
       .catch(function (error) {
