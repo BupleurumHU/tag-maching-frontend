@@ -23,12 +23,15 @@
       v-model:main-active-index="activeIndex"
       :items="tagLists"
   />
-
-
+  <div style="padding: 12px">
+<!--block 设置块级元素-->
+  <van-button block type="primary" @click="doSearch">搜索</van-button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import {useRouter} from "vue-router";
 
 const searchText = ref('');
 
@@ -58,6 +61,17 @@ const onCancel = () => {
 const close = (tag:any) => {
   activeIds.value = activeIds.value.filter((item) => item !== tag);
 };
+const router = useRouter();
+const doSearch = () => {
+  router.push({
+    path:'/search/result',
+    query:{
+      // tags:activeIds.value
+      //传递标签数组?tags=['test1','test']
+      tags:activeIds.value.join(',')
+    }
+  })
+}
 
 const activeIds = ref([]);
 const activeIndex = ref(0);
