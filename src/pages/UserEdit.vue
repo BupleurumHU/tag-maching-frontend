@@ -18,8 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {ref} from "vue";
+import {getCurrentUser} from "../services/user.ts";
+import myAxios from "../plugins/myAxios.ts";
+import type {CurrentUser} from "../models/user";
+import {showFailToast, showToast} from "vant";
 
 const route = useRoute();
 // 类型转换函数
@@ -36,9 +40,29 @@ const editUser = ref({
   editValue: getStringValue(route.query.value),
 })
 
-const onSubmit = (values) => {
-  //todo 将editUser发送给后端
-  console.log('submit', values);
+const router = useRouter();
+const user = ref<CurrentUser>()
+
+const onSubmit =async () => {
+  const res = await getCurrentUser();
+  if (res) {
+    user.value = res;
+  }
+  if (user.value) {
+    const res = await myAxios.post('/user/update', {
+      [editUser.value.editKey]: editUser.value.editValue,
+      id: user.value.id,
+    });
+    if (res.data.code === 0) {
+      showToast('更新成功');
+      await getCurrentUser();
+      router.back();
+    } else {
+      showFailToast('更新失败');
+    }
+  } else {
+    showFailToast('获取用户信息失败');
+  }
 };
 
 </script>

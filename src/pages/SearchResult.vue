@@ -21,7 +21,7 @@
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import myAxios from "../plugins/myAxios.ts";
-import {Toast} from "vant";
+import {showFailToast, showToast} from "vant";
 import qs from 'qs';
 import type {CurrentUser} from "../models/user";
 
@@ -60,11 +60,11 @@ onMounted(()=>{
               })() :
               user.tags
         })) || [];
-        Toast.success('搜索成功');
+        showToast('搜索成功');
       })
       .catch(function (error) {
         console.error('/user/search/tags',error);
-        Toast.fail('搜索失败');
+        showFailToast('搜索失败');
       })
 })
 
