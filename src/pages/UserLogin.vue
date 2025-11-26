@@ -27,19 +27,20 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import myAxios from "../plugins/myAxios.ts";
+import myAxios, {type BaseResponse} from "../plugins/myAxios.ts";
 import {showToast,showFailToast} from "vant";
 import {useRouter} from "vue-router";
+import type {CurrentUser} from "../models/user";
 
 const router = useRouter();
 const userAccount = ref('');
 const userPassword = ref('');
 const onSubmit = async () => {
-  const res = await myAxios.post('/user/login', {
+  const res:BaseResponse<CurrentUser> = await myAxios.post('/user/login', {
     userAccount: userAccount.value,
     userPassword: userPassword.value
   })
-  if (res.data.code === 0 && res.data.data) {
+  if (res.code === 0 && res.data) {
     showToast('登录成功');
     await router.push('/');
   } else {

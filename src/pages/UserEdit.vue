@@ -21,7 +21,7 @@
 import {useRoute, useRouter} from "vue-router";
 import {ref} from "vue";
 import {getCurrentUser} from "../services/user.ts";
-import myAxios from "../plugins/myAxios.ts";
+import myAxios, {type BaseResponse} from "../plugins/myAxios.ts";
 import type {CurrentUser} from "../models/user";
 import {showFailToast, showToast} from "vant";
 
@@ -49,11 +49,11 @@ const onSubmit =async () => {
     user.value = res;
   }
   if (user.value) {
-    const res = await myAxios.post('/user/update', {
+    const res:BaseResponse<number> = await myAxios.post('/user/update', {
       [editUser.value.editKey]: editUser.value.editValue,
       id: user.value.id,
     });
-    if (res.data.code === 0) {
+    if (res.code === 0) {
       showToast('更新成功');
       await getCurrentUser();
       router.back();

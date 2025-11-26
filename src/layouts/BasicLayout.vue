@@ -24,7 +24,9 @@ const onClickRight = () => {
       <van-icon name="search" size="18"/>
     </template>
   </van-nav-bar>
-  <router-view />
+  <div id="comment">
+    <router-view />
+  </div>
 
   <van-tabbar route>
     <van-tabbar-item replace to="/" name="index" icon="home-o">主页</van-tabbar-item>
@@ -35,5 +37,7 @@ const onClickRight = () => {
 </template>
 
 <style scoped>
-
+#comment {
+  padding-bottom: 50px;
+}
 </style>

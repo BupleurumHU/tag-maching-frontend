@@ -1,20 +1,5 @@
 <template>
-  <van-card
-      v-for="user in userList"
-      :key="user.id"
-      :desc="user.profile"
-      :title="`${user.username}(${user.plantNo})`"
-      :thumb="user.avatarUrl"
-  >
-    <template #tags>
-      <van-tag plain type="primary" v-for="tag in user.tags" :key="tag" style="margin: 5px;">
-        {{tag}}
-      </van-tag>
-    </template>
-    <template #footer>
-      <van-button size="mini">联系我</van-button>
-    </template>
-  </van-card>
+  <user-card-list :user-list="userList"  />
   <van-empty v-if="!userList || userList.length < 1" description="没有搜索结果" />
 </template>
 <script setup lang="ts">
@@ -24,6 +9,7 @@ import myAxios from "../plugins/myAxios.ts";
 import {showFailToast, showToast} from "vant";
 import qs from 'qs';
 import type {CurrentUser} from "../models/user";
+import UserCardList from "../components/UserCardList.vue";
 
 const userList = ref<CurrentUser[]>([]);
 const route = useRoute();
@@ -47,7 +33,7 @@ onMounted(()=>{
       .then(function (response) {
         console.log('/user/search/tags succeed', response);
         // 对返回的数据进行处理，将 tags 字符串转换为数组
-        userList.value = response.data?.data?.map((user: any) => ({
+        userList.value = response.data?.map((user: any) => ({
           ...user,
           tags: typeof user.tags === 'string' ?
               (() => {
